@@ -1,0 +1,10 @@
+# File Managed by Puppet
+search <%= search.each do |src| %><%= src %> <% end %>
+<% dns_servers.each do |ns| %>nameserver <%= ns %>
+<% end %>
+
+<% if scope.lookupvar("resolver::options") != "" then -%>
+<% scope.lookupvar("resolver::options").each_pair do |key, value_hash| %>
+options <%= key %><% if value_hash =! "" -%>:<%= value_hash %><% end %>
+<% end %>
+
