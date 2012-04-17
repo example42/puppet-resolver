@@ -4,6 +4,6 @@
 <% search.each do |src| -%>search <%= src %>
 <% end -%>
 <% sortlist.each do |sl| -%>sortlist <%= sl %> <% end -%>
-<% scope.lookupvar("resolver::options").each_pair do |key, value| -%>
+<% scope.lookupvar("resolver::options").sort_by {|key, value| key}.each do |key, value| -%>
 options <%= key %><% if value != "" -%>:<%= value %><% end %>
 <% end -%>
