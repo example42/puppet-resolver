@@ -243,7 +243,7 @@ class resolver (
 
   ### Firewall management, if enabled ( firewall => true )
   if $resolver::bool_firewall == true {
-    firewall { "resolver_udp_53":
+    firewall { 'resolver_udp_53':
       source      => $resolver::firewall_src,
       destination => $resolver::dns_servers,
       protocol    => 'udp',
