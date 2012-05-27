@@ -35,6 +35,8 @@ describe 'resolver' do
       content.should match "domain test.dom"
       content.should match "nameserver nameserver1"
       content.should match "nameserver nameserver2"
+      content.should_not match "sortlist"
+      content.should_not match "options"
     end
     it 'should not request a source' do
       content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
