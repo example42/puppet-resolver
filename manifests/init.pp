@@ -7,6 +7,9 @@
 #
 # Class specific paramers
 #
+# [*dns_domain*]
+#   DNS domain to configure.
+#
 # [*dns_servers*]
 #   IP of the nameservers to use. Can be an array.
 #
@@ -15,6 +18,9 @@
 #
 # [*sortlist*]
 #   IP-address-netmask pairs to use for the sortlist option. Can be an array.
+#
+# [*options*]
+#   Options to add into the resolv.conf file. Must be a map.
 #
 # Standard class parameters
 # Define the general class behaviour and customizations
@@ -122,9 +128,11 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class resolver (
+  $dns_domain          = params_lookup( 'dns_domain' , 'global' ),
   $dns_servers         = params_lookup( 'dns_servers' , 'global' ),
   $search              = params_lookup( 'search' ),
   $sortlist            = params_lookup( 'sortlist' ),
+  $options             = params_lookup( 'options' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $template            = params_lookup( 'template' ),
@@ -151,6 +159,27 @@ class resolver (
   $bool_firewall=any2bool($firewall)
   $bool_debug=any2bool($debug)
   $bool_audit_only=any2bool($audit_only)
+  $array_dns_servers = is_array($resolver::dns_servers) ? {
+    false     => $resolver::dns_servers ? {
+      ''      => [],
+      default => split($resolver::dns_servers, ','),
+    },
+    default   => $resolver::dns_servers,
+  }
+  $array_search = is_array($resolver::search) ? {
+    false     => $resolver::search ? {
+      ''      => [],
+      default => split($resolver::search, ','),
+    },
+    default   => $resolver::search,
+  }
+  $array_sortlist = is_array($resolver::sortlist) ? {
+    false     => $resolver::sortlist ? {
+      ''      => [],
+      default => split($resolver::sortlist, ','),
+    },
+    default   => $resolver::sortlist,
+  }
 
   ### Definition of some variables used in the module
   $manage_audit = $resolver::bool_audit_only ? {
@@ -169,11 +198,14 @@ class resolver (
   }
 
   $manage_file_content = $resolver::template ? {
-    ''        => $resolver::dns_servers ? {
-      ''      => undef,
-      default => template('resolver/resolv.conf.erb'),
+    ''          => $resolver::dns_servers ? {
+      ''        => undef,
+      default   => $resolver::dns_domain ? {
+        ''      => undef,
+        default => template('resolver/resolv.conf.erb'),
+      },
     },
-    default   => template($resolver::template),
+    default     => template($resolver::template),
   }
 
   ### Managed resources
@@ -220,7 +252,7 @@ class resolver (
 
   ### Firewall management, if enabled ( firewall => true )
   if $resolver::bool_firewall == true {
-    firewall { "resolver_udp_53":
+    firewall { 'resolver_udp_53':
       source      => $resolver::firewall_src,
       destination => $resolver::dns_servers,
       protocol    => 'udp',
