@@ -16,6 +16,9 @@
 # [*sortlist*]
 #   IP-address-netmask pairs to use for the sortlist option. Can be an array.
 #
+# [*options*]
+#   Options to add into the resolv.conf file. Must be a map.
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -125,6 +128,7 @@ class resolver (
   $dns_servers         = params_lookup( 'dns_servers' , 'global' ),
   $search              = params_lookup( 'search' ),
   $sortlist            = params_lookup( 'sortlist' ),
+  $options             = params_lookup( 'options' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $template            = params_lookup( 'template' ),
