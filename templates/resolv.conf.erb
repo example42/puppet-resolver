@@ -1,9 +1,15 @@
 # File Managed by Puppet
-<% dns_servers.each do |ns| %>nameserver <%= ns %>
-<% end -%>
-<% search.each do |src| -%>search <%= src %>
-<% end -%>
-<% sortlist.each do |sl| -%>sortlist <%= sl %> <% end -%>
-<% scope.lookupvar("resolver::options").sort_by {|key, value| key}.each do |key, value| -%>
-options <%= key %><% if value != "" -%>:<%= value %><% end %>
-<% end -%>
+domain <%= scope.lookupvar('resolver::dns_domain') %>
+search <% scope.lookupvar('resolver::array_search').each do |src| %><%= src %> <% end %>
+<% scope.lookupvar('resolver::array_dns_servers').each do |ns| %>nameserver <%= ns %>
+<% end %>
+
+<% if scope.lookupvar('resolver::array_sortlist').length > 0 then %>
+sortlist <% scope.lookupvar('resolver::array_sortlist').each do |sl| %><%= sl %> <% end %>
+<% end %>
+
+<% if scope.lookupvar('resolver::array_options').length > 0 then %>
+<% scope.lookupvar('resolver::array_options').sort_by {|key, value| key}.each do |key, value| %>
+options <%= key %><% if value != "" %>:<%= value %><% end %>
+<% end %>
+<% end %>
