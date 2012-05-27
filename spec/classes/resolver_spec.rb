@@ -8,6 +8,12 @@ describe 'resolver' do
 
   describe 'Test standard installation' do
     it { should contain_file('resolv.conf').with_ensure('present') }
+    it 'should not touch existing file' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should be_nil
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
+      content.should be_nil
+    end
   end
 
   describe 'Test standard installation with monitoring and firewalling' do
@@ -31,15 +37,22 @@ describe 'resolver' do
       content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
       content.should match "value_a"
     end
-
+    it 'should not request a source' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
+      content.should be_nil
+    end
   end
 
   describe 'Test customizations - source' do
     let(:params) { { :source => "puppet://modules/resolver/spec" } }
 
-    it 'should request a valid source ' do
+    it 'should request a valid source' do
       content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
       content.should == "puppet://modules/resolver/spec"
+    end
+    it 'should not build template' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should be_nil
     end
   end
 
