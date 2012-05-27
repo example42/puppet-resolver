@@ -26,6 +26,36 @@ describe 'resolver' do
     end
   end
 
+  describe 'Test parameters as arrays' do
+    let(:params) { {:search => ['search1', 'search2'], :dns_servers => ['nameserver1', 'nameserver2'] } }
+
+    it 'should generate a valid template' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should match "search search1 search2"
+      content.should match "nameserver nameserver1"
+      content.should match "nameserver nameserver2"
+    end
+    it 'should not request a source' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
+      content.should be_nil
+    end
+  end
+
+  describe 'Test parameters as strings' do
+    let(:params) { {:search => 'search1,search2', :dns_servers => 'nameserver1,nameserver2' } }
+
+    it 'should generate a valid template' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should match "search search1 search2"
+      content.should match "nameserver nameserver1"
+      content.should match "nameserver nameserver2"
+    end
+    it 'should not request a source' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
+      content.should be_nil
+    end
+  end
+
   describe 'Test customizations - template' do
     let(:params) { {:template => "resolver/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
 

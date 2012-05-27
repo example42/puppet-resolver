@@ -1,14 +1,14 @@
 # File Managed by Puppet
-search <% scope.lookupvar('resolver::search').each do |src| %><%= src %> <% end %>
-<% scope.lookupvar('resolver::dns_servers').each do |ns| %>nameserver <%= ns %>
+search <% scope.lookupvar('resolver::array_search').each do |src| %><%= src %> <% end %>
+<% scope.lookupvar('resolver::array_dns_servers').each do |ns| %>nameserver <%= ns %>
 <% end %>
 
-<% if scope.lookupvar('resolver::sortlist') != '' then %>
-sortlist <% scope.lookupvar('resolver::sortlist').each do |sl| %><%= sl %> <% end %>
+<% if scope.lookupvar('resolver::array_sortlist') != '' then %>
+sortlist <% scope.lookupvar('resolver::array_sortlist').each do |sl| %><%= sl %> <% end %>
 <% end %>
 
-<% if scope.lookupvar('resolver::options') != '' then %>
-<% scope.lookupvar('resolver::options').sort_by {|key, value| key}.each do |key, value| %>
+<% if scope.lookupvar('resolver::array_options') != '' then %>
+<% scope.lookupvar('resolver::array_options').sort_by {|key, value| key}.each do |key, value| %>
 options <%= key %><% if value != "" %>:<%= value %><% end %>
 <% end %>
 <% end %>
