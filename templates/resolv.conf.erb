@@ -1,4 +1,5 @@
 # File Managed by Puppet
+domain <%= scope.lookupvar('resolver::dns_domain') %>
 search <% scope.lookupvar('resolver::array_search').each do |src| %><%= src %> <% end %>
 <% scope.lookupvar('resolver::array_dns_servers').each do |ns| %>nameserver <%= ns %>
 <% end %>

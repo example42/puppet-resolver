@@ -7,6 +7,9 @@
 #
 # Class specific paramers
 #
+# [*dns_domain*]
+#   DNS domain to configure.
+#
 # [*dns_servers*]
 #   IP of the nameservers to use. Can be an array.
 #
@@ -125,6 +128,7 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class resolver (
+  $dns_domain          = params_lookup( 'dns_domain' , 'global' ),
   $dns_servers         = params_lookup( 'dns_servers' , 'global' ),
   $search              = params_lookup( 'search' ),
   $sortlist            = params_lookup( 'sortlist' ),
@@ -185,11 +189,14 @@ class resolver (
   }
 
   $manage_file_content = $resolver::template ? {
-    ''        => $resolver::dns_servers ? {
-      ''      => undef,
-      default => template('resolver/resolv.conf.erb'),
+    ''          => $resolver::dns_servers ? {
+      ''        => undef,
+      default   => $resolver::dns_domain ? {
+        ''      => undef,
+        default => template('resolver/resolv.conf.erb'),
+      },
     },
-    default   => template($resolver::template),
+    default     => template($resolver::template),
   }
 
   ### Managed resources

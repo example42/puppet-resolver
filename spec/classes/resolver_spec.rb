@@ -4,7 +4,7 @@ describe 'resolver' do
 
   let(:title) { 'resolver' }
   let(:node) { 'rspec.example42.com' }
-  let(:facts) { { :ipaddress => '10.42.42.42' } }
+  let(:facts) { { :ipaddress => '10.42.42.42', :domain => 'test.dom' } }
 
   describe 'Test standard installation' do
     it { should contain_file('resolv.conf').with_ensure('present') }
@@ -26,11 +26,28 @@ describe 'resolver' do
     end
   end
 
+  describe 'Test with default domain' do
+    let(:params) { { :dns_servers => ['nameserver1', 'nameserver2'] } }
+
+    it { should contain_file('resolv.conf').with_ensure('present') }
+    it 'should generate a valid template' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should match "domain test.dom"
+      content.should match "nameserver nameserver1"
+      content.should match "nameserver nameserver2"
+    end
+    it 'should not request a source' do
+      content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:source]
+      content.should be_nil
+    end
+  end
+
   describe 'Test parameters as arrays' do
-    let(:params) { {:search => ['search1', 'search2'], :dns_servers => ['nameserver1', 'nameserver2'] } }
+    let(:params) { {:dns_domain => 'the_domain', :search => ['search1', 'search2'], :dns_servers => ['nameserver1', 'nameserver2'] } }
 
     it 'should generate a valid template' do
       content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should match "domain the_domain"
       content.should match "search search1 search2"
       content.should match "nameserver nameserver1"
       content.should match "nameserver nameserver2"
@@ -42,10 +59,11 @@ describe 'resolver' do
   end
 
   describe 'Test parameters as strings' do
-    let(:params) { {:search => 'search1,search2', :dns_servers => 'nameserver1,nameserver2' } }
+    let(:params) { {:dns_domain => 'the_domain', :search => 'search1,search2', :dns_servers => 'nameserver1,nameserver2' } }
 
     it 'should generate a valid template' do
       content = catalogue.resource('file', 'resolv.conf').send(:parameters)[:content]
+      content.should match "domain the_domain"
       content.should match "search search1 search2"
       content.should match "nameserver nameserver1"
       content.should match "nameserver nameserver2"
