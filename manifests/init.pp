@@ -157,21 +157,21 @@ class resolver (
   $bool_audit_only=any2bool($audit_only)
   $array_dns_servers = is_array($resolver::dns_servers) ? {
     false     => $resolver::dns_servers ? {
-      ''      => '',
+      ''      => [],
       default => split($resolver::dns_servers, ','),
     },
     default   => $resolver::dns_servers,
   }
   $array_search = is_array($resolver::search) ? {
     false     => $resolver::search ? {
-      ''      => '',
+      ''      => [],
       default => split($resolver::search, ','),
     },
     default   => $resolver::search,
   }
   $array_sortlist = is_array($resolver::sortlist) ? {
     false     => $resolver::sortlist ? {
-      ''      => '',
+      ''      => [],
       default => split($resolver::sortlist, ','),
     },
     default   => $resolver::sortlist,
