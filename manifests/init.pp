@@ -133,6 +133,7 @@ class resolver (
   $source              = params_lookup( 'source' ),
   $template            = params_lookup( 'template' ),
   $options             = params_lookup( 'options' ),
+  $absent              = params_lookup( 'absent' ),
   $monitor             = params_lookup( 'monitor' , 'global' ),
   $monitor_tool        = params_lookup( 'monitor_tool' , 'global' ),
   $monitor_target      = params_lookup( 'monitor_target' , 'global' ),
@@ -150,6 +151,7 @@ class resolver (
   $config_file_group   = params_lookup( 'config_file_group' )
   ) inherits resolver::params {
 
+  $bool_absent=any2bool($absent)
   $bool_monitor=any2bool($monitor)
   $bool_puppi=any2bool($puppi)
   $bool_firewall=any2bool($firewall)
@@ -178,6 +180,11 @@ class resolver (
   }
 
   ### Definition of some variables used in the module
+  $manage_file = $resolver::bool_absent ? {
+    true    => 'absent',
+    default => 'present',
+  }
+
   $manage_audit = $resolver::bool_audit_only ? {
     true  => 'all',
     false => undef,
@@ -206,7 +213,7 @@ class resolver (
 
   ### Managed resources
   file { 'resolv.conf':
-    ensure  => present,
+    ensure  => $resolver::manage_file,
     path    => $resolver::config_file,
     mode    => $resolver::config_file_mode,
     owner   => $resolver::config_file_owner,
