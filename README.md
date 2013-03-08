@@ -94,3 +94,5 @@ For detailed info about the logic and usage patterns of Example42 modules check 
           firewall_tool => 'iptables',
         }
 
+
+[![Build Status](https://travis-ci.org/example42/puppet-resolver.png?branch=master)](https://travis-ci.org/example42/puppet-resolver)
