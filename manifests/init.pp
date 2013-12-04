@@ -182,7 +182,7 @@ class resolver (
   ### Definition of some variables used in the module
   $manage_file = $resolver::bool_absent ? {
     true    => 'absent',
-    default => 'present',
+    default => 'file',
   }
 
   $manage_audit = $resolver::bool_audit_only ? {
