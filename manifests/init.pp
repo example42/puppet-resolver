@@ -265,6 +265,16 @@ class resolver (
       tool        => $resolver::firewall_tool,
       enable      => $resolver::bool_firewall,
     }
+    firewall { 'resolver_tcp_53':
+      source      => $resolver::firewall_src,
+      destination => $resolver::dns_servers,
+      protocol    => 'tcp',
+      port        => '53',
+      action      => 'allow',
+      direction   => 'output',
+      tool        => $resolver::firewall_tool,
+      enable      => $resolver::bool_firewall,
+    }
   }
 
 
