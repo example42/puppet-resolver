@@ -86,7 +86,7 @@ For detailed info about the logic and usage patterns of Example42 modules check 
           monitor_tool => [ 'nagios' , 'puppi' ],
         }
 
-* Activate automatic firewalling. This option requires the usage of Example42 firewall and relevant firewall tools modules. Note that firewall rules are automatically applied outbound for port udp/54 to the specified dns_servers.
+* Activate automatic firewalling. This option requires the usage of Example42 firewall and relevant firewall tools modules. Note that firewall rules are automatically applied outbound for port udp/53 to the specified dns_servers.
 
         class { 'resolver':     
           dns_servers   => [ '8.8.8.8' , '8.8.4.4' ],
