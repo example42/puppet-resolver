@@ -35,7 +35,8 @@ class resolver::params {
   }
 
   $config_file_group = $::operatingsystem ? {
-    default => 'root',
+    /(?i:OpenBSD)/ => 'wheel',
+    default        => 'root',
   }
 
   # General Settings
