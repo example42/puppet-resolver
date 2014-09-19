@@ -242,7 +242,7 @@ class resolver (
 
 
   ### Service monitoring
-  if $resolver::bool_monitor {
+#  if $resolver::bool_monitor {
 #    monitor::plugin { "resolver_plugin":
 #      protocol => $resolver::protocol,
 #      port     => $resolver::port,
@@ -250,7 +250,7 @@ class resolver (
 #      tool     => $resolver::monitor_tool,
 #      enable   => $resolver::bool_monitor,
 #    }
-  }
+#  }
 
 
   ### Firewall management, if enabled ( firewall => true )
