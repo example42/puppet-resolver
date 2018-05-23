@@ -225,7 +225,7 @@ class resolver (
   }
 
   ### Include custom class if $my_class is set
-  if $resolver::my_class {
+  if $resolver::my_class and $resolver::my_class != '' {
     include $resolver::my_class
   }
 
